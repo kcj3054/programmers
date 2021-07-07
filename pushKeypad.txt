@@ -1,0 +1,67 @@
+#include <string>
+#include <vector>
+#include <memory.h>
+#include <queue>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+int map[4][3] = {
+	1, 2, 3,
+	4, 5, 6,
+	7, 8, 9,
+	100, 0, 100
+};
+string solution(vector<int> numbers, string hand) {
+	string answer = "";
+
+	int leftPos = 100, rightPos = 100;
+
+	for (int i = 0; i < numbers.size(); i++) {
+		int now = numbers[i];
+
+		if (now == 1 || now == 4 || now == 7) {
+			answer += "L";
+			leftPos = now;
+		}
+		else if (now == 3 || now == 6 || now == 9) {
+			answer += "R";
+			rightPos = now;
+		}
+		else {
+			pair<int, int> nowDis;
+			pair<int, int> leftDis;
+			pair<int, int> rightDis;
+
+			for (int r = 0; r < 4; r++) {
+				for (int c = 0; c < 3; c++) {
+					if (map[r][c] == now) nowDis.first = r, nowDis.second = c;
+					if (map[r][c] == leftPos) leftDis.first = r, leftDis.second = c;
+					if (map[r][c] == rightPos) rightDis.first = r, rightDis.second = c;
+				}
+			}
+			int ld = abs(nowDis.first - leftDis.first) + abs(nowDis.second - leftDis.second);
+			int rd = abs(nowDis.first - rightDis.first) + abs(nowDis.second - rightDis.second);
+			if (ld < rd) {
+				answer += "L";
+				leftPos = now;
+			} // 2 4 
+			else if (ld > rd) {
+				answer += "R";
+				rightPos = now;
+			}
+			else {  //거리가 같을 경우 
+				if (hand == "left") {
+					answer += "L";
+					leftPos = now;
+				}
+				else {
+					answer += "R";
+					rightPos = now;
+				}
+			}
+		}
+	}
+	return answer;
+}
